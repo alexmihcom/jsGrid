@@ -446,6 +446,17 @@ var jsGrid = function() {
             _this.current.list();
         });
     }
+    
+    this.getaVal = function(obj) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        for (var i = 0; i < args.length; i++) {
+            if (!obj || !obj.hasOwnProperty(args[i])) {
+                return null;
+            }
+            obj = obj[args[i]];
+        }
+        return obj;
+    }
 
     // init filters
     let query = window.location.search.replace('?', '').split('&');
