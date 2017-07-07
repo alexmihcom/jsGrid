@@ -409,27 +409,40 @@ var jsGrid = function() {
     }
     
     this.pagination = function(response) {
-        if(typeof(response.last_page) == 'undefined' || response.last_page <= 1) {
-            return false;
-        }
-        
         let tbody = $(_this.current.config.tableElement).closest('.fixed-table-body');
         if($(tbody).find('.js-pager').length == 0) {
            $(tbody).append('<nav class="text-center js-pager"></nav>');
         }
-        
-        let html = `<ul class="pagination">`;
-            for(let i = 1; i <= response.last_page; i++) {
-                html += `<li data-page="${i}" ><a href="#" data-page="${i}" >${i}</a></li>`;
-            }
-            html += `</ul>`;
-        
+
+        if(typeof(response.last_page) == 'undefined' || response.last_page <= 1) {
+            $(tbody).find('.js-pager').hide();
+            return false;
+        }
+        $(tbody).find('.js-pager').show();
+
+        var next = response.current_page * 1  + 1;
+        var back = response.current_page * 1  - 1;
+        if (back <= 0) {back = 1}
+        if (next >= response.last_page) {next = response.last_page}
+
+        let html = `<ul class="pagination">
+            <li class="pull-left" data-page="1"><a href="#" data-page="1">1</a></li>
+            <li class="pull-left"><a href = "#" data-page="${back}">&laquo;</a></li>
+            <li class="pull-left"><input type="text" class="form-control js-page-input" value="${response.current_page}"></li>
+            <li class="pull-left"><a href = "#" data-page="${next}">&raquo;</a></li>
+            <li class="pull-left" data-page="${response.last_page}"><a href = "#" data-page="${response.last_page}">${response.last_page}</a></li>
+        </ul>`;
+
         $(tbody).find('.js-pager').html(html);
         $(tbody).find(`.js-pager li[data-page="${response.current_page}"]`).addClass('active');
         $(tbody).find('.js-pager a').click(function(e) {
             e.preventDefault();
-            
+
             _this.current._page = $(this).attr('data-page');
+            _this.current.list();
+        });
+        $(tbody).find('.js-page-input').change(function () {
+            _this.current._page = $(this).val();
             _this.current.list();
         });
     }
