@@ -8,7 +8,12 @@ var jsGrid = function() {
     this._page = 1;
 	this._limit = 10;
 	this._total = 0;
-    this._filter = {};
+    this._filter = {
+        order: {
+            name: 'id',
+            order: 'asc',
+        }
+    };
 
     this._currentModal = null;
 
@@ -107,6 +112,8 @@ var jsGrid = function() {
     this.afterList = function(response) {
         _this.current.tableData = response.data;
         _this.current.pagination(response);
+        _this.current.showOrder()
+        
         $('.loader').hide();
     }
 
@@ -292,6 +299,14 @@ var jsGrid = function() {
         if(_this.current.config.listAjaxUrl != null) {
             _this.current.list();
         }
+        
+        $('.th-inner.sortable').click(function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            e.stopImmediatePropagation()
+            
+            _this.current.order($(this).parent().data('field'))
+        })
     }
 
     this.deleteIconEvents = {
@@ -456,6 +471,39 @@ var jsGrid = function() {
             obj = obj[args[i]];
         }
         return obj;
+    }
+    
+    /**
+     * Сортировка
+     */
+    this.showOrder = function() {
+        let col = $(_this.current.config.tableElement)
+                .find(`th[data-field="${_this.current._filter.order.name}"]`)
+                .find('.sortable')
+        if(_this.current._filter.order.order == 'asc') {
+            col.addClass('asc')
+        } else {
+            col.addClass('desc')
+        }
+    }
+    
+    this.order = function(field) {
+        $('.th-inner.sortable').removeClass('asc')
+            .removeClass('desc')
+            .addClass('both')
+    
+        if(_this.current._filter.order.name == field) {
+            if(_this.current._filter.order.order == 'asc') {
+                _this.current._filter.order.order = 'desc'
+            } else {
+                _this.current._filter.order.order = 'asc'
+            }
+        } else {
+            _this.current._filter.order.order = 'asc'
+        }
+        _this.current._filter.order.name = field
+        _this.current.showOrder()
+        _this.current.list()
     }
 
     // init filters
