@@ -424,7 +424,7 @@ var jsGrid = function() {
     }
     
     this.pagination = function(response) {
-        let tbody = $(_this.current.config.tableElement).closest('.fixed-table-body');
+        var tbody = $(_this.current.config.tableElement).closest('.fixed-table-body');
         if($(tbody).find('.js-pager').length == 0) {
            $(tbody).append('<nav class="text-center js-pager"></nav>');
         }
@@ -440,7 +440,7 @@ var jsGrid = function() {
         if (back <= 0) {back = 1}
         if (next >= response.last_page) {next = response.last_page}
 
-        let html = `<ul class="pagination">
+        var html = `<ul class="pagination">
             <li class="pull-left" data-page="1"><a href="#" data-page="1">1</a></li>
             <li class="pull-left"><a href = "#" data-page="${back}">&laquo;</a></li>
             <li class="pull-left"><input type="text" class="form-control js-page-input" value="${response.current_page}"></li>
@@ -477,7 +477,7 @@ var jsGrid = function() {
      * Сортировка
      */
     this.showOrder = function() {
-        let col = $(_this.current.config.tableElement)
+        var col = $(_this.current.config.tableElement)
                 .find(`th[data-field="${_this.current._filter.order.name}"]`)
                 .find('.sortable')
         if(_this.current._filter.order.order == 'asc') {
@@ -507,9 +507,9 @@ var jsGrid = function() {
     }
 
     // init filters
-    let query = window.location.search.replace('?', '').split('&');
-    for(let i in query) {
-        let param = query[i].split('=');
+    var query = window.location.search.replace('?', '').split('&');
+    for(var i in query) {
+        var param = query[i].split('=');
         if(typeof(param[1]) == 'string' && param[1] != '') {
             _this.current._filter[param[0]] = param[1];
         }
