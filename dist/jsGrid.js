@@ -294,11 +294,6 @@ var jsGrid = function() {
         if(_this.current.config.tableElement != null) {
             $(_this.current.config.tableElement).bootstrapTable(_this.current.config.bootstrapTable);
         }
-
-        // update bootstrap table content by ajax
-        if(_this.current.config.listAjaxUrl != null) {
-            _this.current.list();
-        }
         
         $('.th-inner.sortable').click(function(e) {
             e.preventDefault()
